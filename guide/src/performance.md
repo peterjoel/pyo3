@@ -31,7 +31,7 @@ fn frobnicate<'py>(value: &Bound<'py, PyAny>) -> PyResult<Bound<'py, PyAny>> {
 }
 ```
 
-This suboptimal as the `FromPyObject<T>` trait requires `extract` to have a `Result<T, PyErr>` return type. For native types like `PyList`, it faster to use `downcast` (which `extract` calls internally) when the error value is ignored. This avoids the costly conversion of a `PyDowncastError` to a `PyErr` required to fulfil the `FromPyObject` contract, i.e.
+This is suboptimal as the `FromPyObject<T>` trait requires `extract` to have a `Result<T, PyErr>` return type. For native types like `PyList`, it faster to use `downcast` (which `extract` calls internally) when the error value is ignored. This avoids the costly conversion of a `PyDowncastError` to a `PyErr` required to fulfil the `FromPyObject` contract, i.e.
 
 ```rust,no_run
 # #![allow(dead_code)]
@@ -99,7 +99,7 @@ impl PartialEq<Foo> for FooBound<'_> {
 
 ## Calling Python callables (`__call__`)
 CPython support multiple calling protocols: [`tp_call`] and [`vectorcall`]. [`vectorcall`] is a more efficient protocol unlocking faster calls.
-PyO3 will try to dispatch Python `call`s using the [`vectorcall`] calling convention to archive maximum performance if possible and falling back to [`tp_call`] otherwise.
+PyO3 will try to dispatch Python `call`s using the [`vectorcall`] calling convention to archieve maximum performance if possible and falling back to [`tp_call`] otherwise.
 This is implemented using the (internal) `PyCallArgs` trait. It defines how Rust types can be used as Python `call` arguments. This trait is currently implemented for
 - Rust tuples, where each member implements `IntoPyObject`,
 - `Bound<'_, PyTuple>`
